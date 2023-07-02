@@ -13,6 +13,7 @@ TAMANHO_MAPA = 200
 COORD_INICIO = (-170, 180)
 COORD_CIVIL = (150, -180)
 COOR_CENTER = (0, 0)
+COORD_SAIDA = (160, 180)
 
 
 window = tkinter.Tk()
@@ -176,9 +177,8 @@ class GameModel(mesa.Model):
     def step(self):
         for pessoa in self.schedule.agents:
             pessoa.move()
-            if(pessoa.energiaHeroi == 0 ):
+            if(pessoa.shape.position == COORD_SAIDA):
                 self.schedule.remove(pessoa)
-                #escreverLog(f'{self.nome}, heroi, foi morto')
 
     def numero_pessoas(self):
         print(self.schedule.get_agent_count())
@@ -187,7 +187,7 @@ class GameModel(mesa.Model):
         for i in self.pessoas:
             i.mostra_status()
 
-    def adicionar_pessoa(self):
+    def adicionar_heroi(self):
         a = Pessoa(self.id, self, -170, 180)
         self.id += 1
         self.pessoas.append(a)
