@@ -26,7 +26,10 @@ class SavannaModel(Model):
     num_zebras = 10, 
     lion_energy = 25, 
     gazelle_energy = 25, 
-    zebra_energy = 25
+    zebra_energy = 25,
+    lion_rep_chance = 2,
+    zebra_rep_chance = 2,
+    gazelle_rep_chance = 2,
   ):
     self.grid = MultiGrid(GRID_SIZE, GRID_SIZE, torus=True)
     self.schedule = RandomActivation(self)
@@ -38,26 +41,31 @@ class SavannaModel(Model):
     self.gazelle_energy = gazelle_energy
     self.zebra_energy = zebra_energy
 
+    self.current_id = 0
+
     for i in range(num_lions):
       x = random.randrange(GRID_SIZE)
       y = random.randrange(GRID_SIZE)
-      lion = LionAgent(i, self, lion_energy)
+      lion = LionAgent(i, self, lion_energy, lion_rep_chance / 100)
       self.schedule.add(lion)
       self.grid.place_agent(lion, (x, y))
+      self.current_id += 1
 
     for i in range(num_gazelles):
       x = random.randrange(GRID_SIZE)
       y = random.randrange(GRID_SIZE)
-      gazelle = GazelleAgent(num_lions + i, self, gazelle_energy)
+      gazelle = GazelleAgent(num_lions + i, self, gazelle_energy, gazelle_rep_chance / 100)
       self.schedule.add(gazelle)
       self.grid.place_agent(gazelle, (x, y))
+      self.current_id += 1
 
     for i in range(num_zebras):
       x = random.randrange(GRID_SIZE)
       y = random.randrange(GRID_SIZE)
-      zebra = ZebraAgent(num_lions + num_gazelles + i, self, zebra_energy)
+      zebra = ZebraAgent(num_lions + num_gazelles + i, self, zebra_energy, zebra_rep_chance / 100)
       self.schedule.add(zebra)
       self.grid.place_agent(zebra, (x, y))
+      self.current_id += 1
 
   def step(self):
     self.schedule.step()
@@ -85,7 +93,10 @@ server = ModularServer(
     "num_zebras": Slider("Quantidade de Zebras", 10, 1, 50),
     "lion_energy": Slider("Energia inicial dos Leões", 20, 1, 50),
     "gazelle_energy": Slider("Energia inicial das Gazelas", 20, 1, 50),
-    "zebra_energy": Slider("Energia inicial das Zebras", 20, 1, 50)
+    "zebra_energy": Slider("Energia inicial das Zebras", 20, 1, 50),
+    "lion_rep_chance": Slider("Chance de reprodução do Leão", 2, 1, 100),
+    "zebra_rep_chance": Slider("Chance de reprodução da Zebra", 2, 1, 100),
+    "gazelle_rep_chance": Slider("Chance de reprodução do Gazela", 2, 1, 100)
   }
 )
 
