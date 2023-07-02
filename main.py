@@ -2,9 +2,9 @@ import random
 from mesa import Model, Agent
 from mesa.space import MultiGrid
 from mesa.time import RandomActivation
-from mesa.visualization.modules import CanvasGrid, ChartModule, TextElement
+from mesa.visualization.modules import CanvasGrid, TextElement
 from mesa.visualization.ModularVisualization import ModularServer
-from mesa.visualization.UserParam import UserSettableParameter
+from mesa.visualization.UserParam import Slider
 
 GRID_SIZE = 25
 
@@ -177,12 +177,12 @@ server = ModularServer(
   [grid_view, agent_count], 
   "Savanna Model", 
   {
-    "num_lions": UserSettableParameter("slider", "Quantidade de Leões", 10, 1, 50),
-    "num_gazelles": UserSettableParameter("slider", "Quantidade de Gazelas", 10, 1, 50),
-    "num_zebras": UserSettableParameter("slider", "Quantidade de Zebras", 10, 1, 50),
-    "lion_energy": UserSettableParameter("slider", "Energia inicial dos Leões", 20, 1, 50),
-    "gazelle_energy": UserSettableParameter("slider", "Energia inicial das Gazelas", 20, 1, 50),
-    "zebra_energy": UserSettableParameter("slider", "Energia inicial das Zebras", 20, 1, 50)
+    "num_lions": Slider("Quantidade de Leões", 10, 1, 50),
+    "num_gazelles": Slider("Quantidade de Gazelas", 10, 1, 50),
+    "num_zebras": Slider("Quantidade de Zebras", 10, 1, 50),
+    "lion_energy": Slider("Energia inicial dos Leões", 20, 1, 50),
+    "gazelle_energy": Slider("Energia inicial das Gazelas", 20, 1, 50),
+    "zebra_energy": Slider("Energia inicial das Zebras", 20, 1, 50)
   }
 )
 
