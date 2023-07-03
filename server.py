@@ -144,9 +144,7 @@ class Heroi(mesa.Agent):
 
     def resgatar(self):
         self.escolhe_alvo_resgate()
-
         self.shape.goto(self.alvoResgate.x - 10, self.alvoResgate.y - 10)
-
         monstros_perto_alvo = game.verifica_monstros_perto(self.alvoResgate)
 
         if (len(monstros_perto_alvo) == 0):
@@ -164,12 +162,17 @@ class Heroi(mesa.Agent):
 
 
 class Pessoa(Agente):
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, x, y):
         super().__init__(unique_id, model)
         createShade(self, 'gifs/boneco_normal.gif')
         self.id = unique_id
         self.salvo = False
         self.morto = False
+        self.x = x
+        self.y = y
+        self.vida = random.randint(50, 150)
+        self.shape.setposition(self.x, self.y)
+        self.shape.showturtle()
 
     def move(self):
         if (self.salvo):
@@ -178,7 +181,7 @@ class Pessoa(Agente):
         if (self.vida <= 0):
             self.morte()
         elif (len(game.verifica_monstros_perto(self)) >= 1):
-            self.vida -= 1
+            self.vida -= 10
 
     def morte(self):
         self.shape.hideturtle()
@@ -258,17 +261,18 @@ class Pessoa(Agente):
 
 
 class GameModel(mesa.Model):
-    def __init__(self, N):
-        self.num_monstros = N
+    def __init__(self, P):
+
+        self.num_pessoas = P
         self.schedule = mesa.time.SimultaneousActivation(self)
         self.pessoas = []
         self.monstros = []
         self.herois = []
         self.id = 10
 
-        for i in range(self.num_monstros):
-            p = Monstro(i, self)
-            self.monstros.append(p)
+        for i in range(self.num_pessoas):
+            p = Pessoa(i, self, 150, -180)
+            self.pessoas.append(p)
             self.schedule.add(p)
             self.id += 1
 
@@ -298,7 +302,7 @@ class GameModel(mesa.Model):
         self.schedule.add(m)
 
     def adicionar_pessoa(self):
-        m = Pessoa(self.id, self)
+        m = Pessoa(self.id, self, 150, -180)
         self.id += 1
         self.pessoas.append(m)
         self.schedule.add(m)
