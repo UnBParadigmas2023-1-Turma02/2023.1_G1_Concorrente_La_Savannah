@@ -162,17 +162,12 @@ class Heroi(mesa.Agent):
 
 
 class Pessoa(Agente):
-    def __init__(self, unique_id, model, x, y):
+    def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         createShade(self, 'gifs/boneco_normal.gif')
         self.id = unique_id
         self.salvo = False
         self.morto = False
-        self.x = x
-        self.y = y
-        self.vida = random.randint(50, 150)
-        self.shape.setposition(self.x, self.y)
-        self.shape.showturtle()
 
     def move(self):
         if (self.salvo):
@@ -198,67 +193,6 @@ class Pessoa(Agente):
         self.escondido = True
         self.salvo = True
 
-    def backtoinitialpoint(self):
-        x, y = self.shape.position()
-        xs, ys = COORD_INICIO
-
-        if x > xs:
-            self.x -= 5
-        if y < ys:
-            self.y += 5
-
-        if x <= 0 and y >= 0:  # REVER ISSO AQUI
-            self.centro = 0
-
-        self.shape.goto(self.x, self.y)
-
-    def gotocenter(self):
-        x, y = self.shape.position()
-        xs, ys = COOR_CENTER
-
-        if x < xs:
-            self.x += 5
-        if y > ys:
-            self.y -= 5
-
-        if x >= 0 and y <= 0:
-            self.centro = 0
-
-        self.shape.goto(self.x, self.y)
-
-    def gotocivil(self):
-        x, y = self.shape.position()
-        xs, ys = COORD_CIVIL
-
-        if x < xs:
-            self.x += 5
-        if y > ys:
-            self.y -= 5
-
-        if (x >= 150 and y <= -180):
-            self.energiaHeroi += random.randint(1, 10)
-            self.isRescued = True
-
-            self.centro = random.randint(0, 3)
-
-        self.shape.goto(self.x, self.y)
-
-    def gotosaida(self):
-        x, y = self.shape.position()
-        xs, ys = COORD_INICIO
-
-        if x < xs:
-            self.x += 5
-        if y < ys:
-            self.y += 5
-
-        if (x >= 160 and y >= 180):
-            self.shape.hideturtle()
-            if (not self.escondido):
-                self.escondido = True
-
-        self.shape.goto(self.x, self.y)
-
 
 class GameModel(mesa.Model):
     def __init__(self, P):
@@ -271,7 +205,7 @@ class GameModel(mesa.Model):
         self.id = 10
 
         for i in range(self.num_pessoas):
-            p = Pessoa(i, self, 150, -180)
+            p = Pessoa(i, self)
             self.pessoas.append(p)
             self.schedule.add(p)
             self.id += 1
