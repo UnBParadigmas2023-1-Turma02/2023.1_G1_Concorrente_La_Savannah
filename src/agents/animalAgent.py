@@ -9,6 +9,7 @@ class AnimalAgent(Agent):
     self.str = "Animal"
     self.color = "green"
     self.rep_percentage = rep_percentage
+    self.shape = "circle"
 
   def move(self):
     possible_moves = self.model.grid.get_neighborhood(self.pos, moore=True, include_center=False)
@@ -37,7 +38,7 @@ class AnimalAgent(Agent):
   def step(self):
     self.move()
     neighbors = self.model.grid.get_neighbors(self.pos, moore=True, include_center=True)
-    preys = [agent for agent in neighbors if isinstance(agent, self.prey)]
+    preys = [agent for agent in neighbors if (agent.str == self.prey)]
 
     if len(preys) > 0:
       prey = random.choice(preys)
@@ -52,7 +53,7 @@ class AnimalAgent(Agent):
 
   def get_portrayal(self):
     return {
-      "Shape": "circle", 
+      "Shape": self.shape, 
       "Color": self.color, 
       "Filled": True, 
       "Layer": 0, 
@@ -61,24 +62,3 @@ class AnimalAgent(Agent):
       "text_color": "white",
       "text_position": "bottom"
     }
-
-
-class GazelleAgent(AnimalAgent):
-  def __init__(self, unique_id, model, energy, rep_chance):
-    super().__init__(unique_id, model, energy, rep_chance, ZebraAgent)
-    self.str = "Gazela"
-    self.color = "red"
-
-
-class LionAgent(AnimalAgent):
-  def __init__(self, unique_id, model, energy, rep_chance):
-    super().__init__(unique_id, model, energy, rep_chance, GazelleAgent)
-    self.str = "Leão"
-    self.color = "orange"
-
-
-class ZebraAgent(AnimalAgent):
-  def __init__(self, unique_id, model, energy, rep_chance):
-    super().__init__(unique_id, model, energy, rep_chance, LionAgent)
-    self.str = "Zebra"
-    self.color = "blue"
