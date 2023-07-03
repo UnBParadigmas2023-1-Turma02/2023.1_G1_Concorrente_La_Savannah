@@ -267,6 +267,13 @@ class GameModel(mesa.Model):
                 return 1
         return 0
 
+    def pessoas_nao_salvas(self):
+        nao_salvas = []
+        for pessoa in self.pessoas:
+            if (not pessoa.salvo and not pessoa.morto):
+                nao_salvas.append(pessoa)
+        return nao_salvas
+
     def esta_perto(self, primeiro, segundo):
         distanciaAceitaComoPerto = range(-50, 50)
         distanciaX = primeiro.x - segundo.x
