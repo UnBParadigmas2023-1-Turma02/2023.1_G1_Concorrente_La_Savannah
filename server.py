@@ -4,55 +4,133 @@ import random
 import tkinter.messagebox
 
 from utils.calcula_disntacia import distance
-from utils.nomes import nomes
 
 
 ID = 4
 RANGE = 5
-TAMANHO_MAPA = 200
+TAMANHO_MAPA = 160
 COORD_INICIO = (-170, 180)
 COORD_CIVIL = (150, -180)
 COOR_CENTER = (0, 0)
 COORD_SAIDA = (160, 180)
+MAPA_JOGAVEL_X = 160
+MAPA_JOGAVEL_Y = 60
+
+MONSTRO_GIF = [
+    'gifs/minotaur_default.gif',
+    'gifs/goblin_default.gif'
+]
+
+PESSOA_GIF = 'gifs/boneco_normal.gif'
+HEROI_GIF = 'gifs/hero_default.gif'
 
 
 window = tkinter.Tk()
 canvas = tkinter.Canvas(master=window, width=400, height=400)
 canvas.grid(padx=2, pady=2, row=0, column=0, rowspan=10, columnspan=10)
 screen = turtle.TurtleScreen(canvas)
+screen.bgpic('gifs/background_florest.png')
+screen.register_shape(PESSOA_GIF)
+screen.register_shape('gifs/hero_default.gif')
+for gif in MONSTRO_GIF:
+    screen.register_shape(gif)
 
 
+def SetShade(self, url):
+    self.shape = turtle.RawTurtle(screen)
+    self.shape.hideturtle()
+    self.shape.shape(url)
+    self.shape.penup()
+    self.shape.setposition(self.x, self.y)
+    self.shape.showturtle()
 
-class Pessoa(mesa.Agent):
-    def __init__(self, unique_id, model, x, y):
+
+class Agente(mesa.Agent):
+    def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.x = x
-        self.y = y
-        self.nome = nomes[unique_id]
-        self.energiaHeroi = random.randint(200, 350)
-        self.resgatados = 0
-        self.vontade = 0
-        self.centro = random.randint(0, 2)
+        self.x = random.randint(-TAMANHO_MAPA, MAPA_JOGAVEL_X)
+        self.y = random.randint(-TAMANHO_MAPA, MAPA_JOGAVEL_Y)
+        self.vida = random.randint(0, 150)
         self.escondido = False
-        self.isRescued = False
-        self.shape = turtle.RawTurtle(screen)
-        self.shape.hideturtle()
- 
-        self.shape.penup()
-        self.shape.setposition(self.x, self.y)
-        self.shape.showturtle()
+
+
+class Monstro(Agente):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.monsterId = random.randint(0, len(MONSTRO_GIF) - 1)
+        SetShade(self, MONSTRO_GIF[self.monsterId])
 
     def move(self):
-        if(self.isRescued == True):
+        if (self.vida == 0):
+            self.morrer()
+        else:
+            if self.shape.xcor() >= 180:
+                self.x -= 5
+            elif self.shape.ycor() >= 50:
+                self.y -= 5
+            elif self.shape.xcor() <= -180:
+                self.x += 5
+            elif self.shape.ycor() <= -180:
+                self.y += 5
+            else:
+                self.x += random.randint(-10, 10)
+                self.y += random.randint(-10, 10)
+
+            self.shape.goto(self.x, self.y)
+
+    def morrer(self):
+        self.shape.hideturtle()
+        self.escondido = True
+
+
+class Heroi(mesa.Agent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.x = 0
+        self.y = 60
+        self.vida = random.randint(0, 150)
+        SetShade(self, 'gifs/hero_default.gif')
+
+    def move(self):
+        self.resgatar()
+
+    def morte(self):
+        self.shape.hideturtle()
+        self.escondido = True
+
+    def atacar(self):
+        self.shape.shape('gifs/boneco_cansado.gif')
+
+    def resgatar(self):
+        pessoasNaoSalvas = balada.pessoas_nao_salvas()
+        if (len(pessoasNaoSalvas) == 0):
+            return
+
+        indexRnd = random.randint(0, len(pessoasNaoSalvas) - 1)
+
+        pessoaRegate = pessoasNaoSalvas[indexRnd]
+
+        self.shape.goto(pessoaRegate.x, pessoaRegate.y)
+        self.shape.goto(COORD_SAIDA)
+        pessoaRegate.resgate()
+
+
+class Pessoa(Agente):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        SetShade(self, 'gifs/boneco_normal.gif')
+
+    def move(self):
+        if (self.isRescued == True):
             self.resgatados += 1
-        if(self.centro != 0):
-            if(self.isRescued == True and self.resgatados < 2): #pegando um civil de cada vez
+        if (self.centro != 0):
+            if (self.isRescued == True and self.resgatados < 2):  # pegando um civil de cada vez
                 self.backtoinitialpoint()
             else:
                 self.gotocenter()
-        elif(self.energiaHeroi == 0): #nessa condição, a gente podia pensar em uma forma de interação. Se o herói morrer, o civil tenta fugir ou morre também ?
-            self.walk_monster() #SÓ PARA TESTAR O A FORMA ALEATÓRIA DE ANDAR
-        elif(distance(self.shape.position(), COORD_CIVIL) < 380 and self.isRescued == False and self.vontade == 1):
+        elif (self.energiaHeroi == 0):  # nessa condição, a gente podia pensar em uma forma de interação. Se o herói morrer, o civil tenta fugir ou morre também ?
+            self.walk_monster()  # SÓ PARA TESTAR O A FORMA ALEATÓRIA DE ANDAR
+        elif (distance(self.shape.position(), COORD_CIVIL) < 380 and self.isRescued == False and self.vontade == 1):
             self.gotocivil()
         else:
             if self.shape.xcor() >= 180:
@@ -73,7 +151,6 @@ class Pessoa(mesa.Agent):
 
             self.energiaHeroi -= 1
 
-
     def backtoinitialpoint(self):
         x, y = self.shape.position()
         xs, ys = COORD_INICIO
@@ -83,7 +160,7 @@ class Pessoa(mesa.Agent):
         if y < ys:
             self.y += 5
 
-        if x <= 0 and y >= 0: #REVER ISSO AQUI
+        if x <= 0 and y >= 0:  # REVER ISSO AQUI
             self.centro = 0
 
         self.shape.goto(self.x, self.y)
@@ -97,7 +174,8 @@ class Pessoa(mesa.Agent):
         if y > ys:
             self.y -= 5
 
-        if x >= 0 and y <= 0:            self.centro = 0
+        if x >= 0 and y <= 0:
+            self.centro = 0
 
         self.shape.goto(self.x, self.y)
 
@@ -110,11 +188,10 @@ class Pessoa(mesa.Agent):
         if y > ys:
             self.y -= 5
 
-        if(x >= 150 and y <= -180):
+        if (x >= 150 and y <= -180):
             self.energiaHeroi += random.randint(1, 10)
             self.isRescued = True
- 
-            escreverLog(f'heroi salvou {self.nome}')
+
             self.centro = random.randint(0, 3)
 
         self.shape.goto(self.x, self.y)
@@ -128,23 +205,18 @@ class Pessoa(mesa.Agent):
         if y < ys:
             self.y += 5
 
-        if(x >= 160 and y >= 180):
+        if (x >= 160 and y >= 180):
             self.shape.hideturtle()
-            if(not self.escondido):
-                escreverLog(f'{self.nome} saiu da balada')
+            if (not self.escondido):
                 self.escondido = True
-
 
         self.shape.goto(self.x, self.y)
 
-    def mostra_status(self):
-        print(self.nome + " tem " + str(self.energiaHeroi) + " sobrando")
-    
     def walk_monster(self):
         # Lógica para andar aleatoriamente pelo mapa
         dx = random.randint(-10, 10)
         dy = random.randint(-30, 30)
-        
+
         # Adicionando um fator de aleatoriedade para a direção dos movimentos
         dx *= random.choice([-1, 1])
         dy *= random.choice([-1, 1])
@@ -155,10 +227,8 @@ class Pessoa(mesa.Agent):
         # Limitando as coordenadas para que o boneco permaneça dentro dos limites do mapa
         self.x = max(min(self.x, 180), -180)
         self.y = max(min(self.y, 180), -180)
-        
- 
+
         self.shape.goto(self.x, self.y)
-    
 
 
 class GameModel(mesa.Model):
@@ -166,18 +236,21 @@ class GameModel(mesa.Model):
         self.num_monstros = N
         self.schedule = mesa.time.SimultaneousActivation(self)
         self.pessoas = []
+        self.monstros = []
+        self.herois = []
         self.id = 10
 
         for i in range(self.num_monstros):
-            p = Pessoa(i, self, -170, 180)
+            p = Monstro(i, self)
             self.pessoas.append(p)
             self.schedule.add(p)
-            escreverLog(f'{p.nome} entrou na balada')
+
+        self.id += 1
 
     def step(self):
         for pessoa in self.schedule.agents:
             pessoa.move()
-            if(pessoa.shape.position == COORD_SAIDA):
+            if (pessoa.shape.position == COORD_SAIDA):
                 self.schedule.remove(pessoa)
 
     def numero_pessoas(self):
@@ -188,10 +261,22 @@ class GameModel(mesa.Model):
             i.mostra_status()
 
     def adicionar_heroi(self):
-        a = Pessoa(self.id, self, -170, 180)
+        a = Heroi(self.id, self)
         self.id += 1
-        self.pessoas.append(a)
+        self.herois.append(a)
         self.schedule.add(a)
+
+    def adicionar_monstro(self):
+        m = Monstro(self.id, self)
+        self.id += 1
+        self.monstros.append(m)
+        self.schedule.add(m)
+
+    def adicionar_pessoa(self):
+        m = Pessoa(self.id, self)
+        self.id += 1
+        self.monstros.append(m)
+        self.schedule.add(m)
 
     def next_agent_id(self):
         return max([agent.unique_id for agent in self.schedule.agents]) + 1
@@ -211,17 +296,9 @@ game = GameModel(10)
 
 
 def Play():
-##    mixer.music.play()
+    # mixer.music.play()
     while FLAG:
         game.step()
-
-
-def funcao_placeholder():
-    game.remover_pessoa()
-
-
-def adicionar_herois():
-    game.adicionar_heroi()
 
 
 Play_Button = tkinter.Button(
@@ -230,12 +307,22 @@ Play_Button.config(bg="light gray", fg="black")
 Play_Button.grid(padx=2, pady=2, row=0, column=11, sticky='nsew')
 
 Board_Button = tkinter.Button(
-    master=window, text="Check todo mundo", command=funcao_placeholder)
+    master=window, text="Check todo mundo", command=game.remover_pessoa)
 Play_Button.config(bg="light gray", fg="black")
 Board_Button.grid(padx=2, pady=2, row=1, column=11, sticky='nsew')
 
 Board_Button = tkinter.Button(
-    master=window, text="Adicionar Heróis", command=adicionar_herois)
+    master=window, text="Adicionar Heróis", command=game.adicionar_heroi)
 Play_Button.config(bg="light gray", fg="black")
 Board_Button.grid(padx=2, pady=2, row=2, column=11, sticky='nsew')
+
+Board_Button = tkinter.Button(
+    master=window, text="Adicionar Monstros", command=game.adicionar_monstro)
+Play_Button.config(bg="light gray", fg="black")
+Board_Button.grid(padx=2, pady=2, row=3, column=11, sticky='nsew')
+
+Board_Button = tkinter.Button(
+    master=window, text="Adicionar Pessoas para resgate", command=game.adicionar_pessoa)
+Play_Button.config(bg="light gray", fg="black")
+Board_Button.grid(padx=2, pady=2, row=4, column=11, sticky='nsew')
 window.mainloop()
