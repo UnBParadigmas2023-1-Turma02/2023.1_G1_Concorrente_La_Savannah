@@ -1,67 +1,87 @@
-# RepositorioTemplate
-Esse repositório é para ser utilizado pelos grupos como um template inicial, da home page do Projeto.
-As seções do Template NÃO DEVEM SER OMITIDAS, sendo TODAS RELEVANTES.
+# 2023.1 G1 SMA: La Savannah
 
-**!! *Atenção: Renomeie o seu repositório para (Ano.Semestre)_(Grupo)_(Paradigma)_(NomeDoProjeto)*. !!** 
-
-Paradigmas:
- - Funcional
- - Logico
- - SMA
-
-**!! *Não coloque os nomes dos alunos no título do repositório*. !!**
-
-**!! *Exemplo de título correto: 2023.1_G1_Logico_ProjetoRoteirosAereos*. !!**
- 
- (Apague esses comentários)
-
-# NomeDoProjeto
-
-**Disciplina**: FGA0210 - PARADIGMAS DE PROGRAMAÇÃO - T02 <br>
-**Nro do Grupo (de acordo com a Planilha de Divisão dos Grupos)**: XX<br>
-**Paradigma**: XXXXXXXXXX<br>
+**Disciplina**: FGA0210 - PARADIGMAS DE PROGRAMAÇÃO - T03 <br>
+**Nro do Grupo (de acordo com a Planilha de Divisão dos Grupos)**: 01<br>
+**Paradigma**: Funcional<br>
 
 ## Alunos
 |Matrícula | Aluno |
 | -- | -- |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
+| 19/0054832 | Arthur Talles de Sousa Cunha       |
+| 18/0105256 | Lucas da Cunha Andrade             |
+| 18/0066382 | Marcos Felipe de Almeida Souza     |
+| 18/0129147 | Pedro de Miranda Haick             |
+| 17/0114929 | Thiago França Vale Oliveira        |
+| 18/0068229 | Victor Yukio Cavalcanti Miki       |
 
 ## Sobre 
-Descreva o seu projeto em linhas gerais. 
-Use referências, links, que permitam conhecer um pouco mais sobre o projeto.
-Capriche nessa seção, pois ela é a primeira a ser lida pelos interessados no projeto.
+Esse projeto é uma simulação de uma savana cujo os animais interagem entre si para descobrir que é o rei da La Savannah. Utilizamos o Mesa que é uma biblioteca de código aberto em Python para modelagem, simulação e análise de agentes baseados em modelos (ABMs - Agent-Based Models). ABMs são uma abordagem de modelagem na qual entidades individuais (agentes) interagem em um ambiente para observar o comportamento coletivo do sistema.
+
+Os animais são os agentes que interagem com o ambiente (Savana) e outros animais. Eles se movem aleatóriamente pelo mapa e quando se deparam com uma presa adjacente ao seu quadrado ele a devora aumentando a fome (tempo de vida) e eliminando o animal.
+
+O programa acaba que restar apenas um único tipo de animal.
+
+<center>
+
+![](./imagens/La_savannah.png)
+
+Tela da simulação
+</center>
 
 ## Screenshots
-Adicione 2 ou mais screenshots do projeto em termos de interface e/ou funcionamento.
+Agora que conhecemos o projeto tem algumas screenshots.
+
+#### TELA INICIAL COM ALGUMAS VARIAVEIS
+
+![](./imagens/definir_savana.png)
+
+Para utilizar basta apertar em "Start". Caso queira configure a savana do jeito que quiser e apertar "RESET".
 
 ## Instalação 
-**Linguagens**: xxxxxx<br>
-**Tecnologias**: xxxxxx<br>
-Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
-Insira um manual ou um script para auxiliar ainda mais.
-Gifs animados e outras ilustrações são bem-vindos!
+**Linguagens**: Python<br>
+**Tecnologias**: MESA<br>
+Pré-requisitos para rodar o seu projeto e os comandos necessários:
+
+Instalar o [python 3 ou superior](https://www.python.org/downloads/). Python é uma linguagem de programação legível e versátil, usada em desenvolvimento web, análise de dados e automação.
+
+* No Windowns, macOS e Linux:
+
+Após instalação e configuração do ambiente de desenvolvimento clonamos o reposítório com o comando:
+
+> $ git clone https://github.com/UnBParadigmas2023-1-Turma02/2023.1_G1_SMA_La_Savannah.git
 
 ## Uso 
-Explique como usar seu projeto.
-Procure ilustrar em passos, com apoio de telas do software, seja com base na interface gráfica, seja com base no terminal.
-Nessa seção, deve-se revelar de forma clara sobre o funcionamento do software.
+
+Para rodar o projeto é recomendado criar um ambiente virtual para melhor experiência. Para isso utilizamos o venv.
+
+na raíz do diretória rodamos:
+
+| $ python3 -m venv project_env
+
+e ativamos o ambiente virtual com:
+
+| $ source project_env/bin/activate ou activate.bat para windowns
+
+Dentro do ambiente virtual instalar as dependências com:
+
+| $ pip install requirements.txt
+
+Por fim, rodar o programa com:
+
+| $ python main.py
 
 ## Vídeo
-Adicione 1 ou mais vídeos com a execução do projeto.
-Procure: 
-(i) Introduzir o projeto;
-(ii) Mostrar passo a passo o código, explicando-o, e deixando claro o que é de terceiros, e o que é contribuição real da equipe;
-(iii) Apresentar particularidades do Paradigma, da Linguagem, e das Tecnologias, e
-(iV) Apresentar lições aprendidas, contribuições, pendências, e ideias para trabalhos futuros.
-OBS: TODOS DEVEM PARTICIPAR, CONFERINDO PONTOS DE VISTA.
-TEMPO: +/- 15min
+Segue a seguir o link do video:
+
+[Link do video]().
 
 ## Participações
-Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
+Participação dos membros do grupo para o projeto:
 |Nome do Membro | Contribuição | Significância da Contribuição para o Projeto (Excelente/Boa/Regular/Ruim/Nula) |
 | -- | -- | -- |
-| Fulano  |  Programação dos Fatos da Base de Conhecimento Lógica | Boa |
+| Lucas da Cunha Andrade             | configuração do ambiente, renderizar server da página, metodos das classes agentes | Excelente |
+| Pedro de Miranda Haick             | modelagem dos agentes | Boa |
+| Victor Yukio Cavalcanti Miki       | Idealização do projeto, renderizar imagens, docker | Boa |
 
 ## Outros 
 Quaisquer outras informações sobre o projeto podem ser descritas aqui. Não esqueça, entretanto, de informar sobre:
@@ -71,5 +91,5 @@ Quaisquer outras informações sobre o projeto podem ser descritas aqui. Não es
 (iV) Trabalhos Futuros.
 
 ## Fontes
-Referencie, adequadamente, as referências utilizadas.
-Indique ainda sobre fontes de leitura complementares.
+https://mesa.readthedocs.io/en/stable/#
+https://docs.python.org/3/
