@@ -1,51 +1,43 @@
-# RepositorioTemplate
-Esse repositório é para ser utilizado pelos grupos como um template inicial, da home page do Projeto.
-As seções do Template NÃO DEVEM SER OMITIDAS, sendo TODAS RELEVANTES.
-
-**!! *Atenção: Renomeie o seu repositório para (Ano.Semestre)_(Grupo)_(Paradigma)_(NomeDoProjeto)*. !!** 
-
-Paradigmas:
- - Funcional
- - Logico
- - SMA
-
-**!! *Não coloque os nomes dos alunos no título do repositório*. !!**
-
-**!! *Exemplo de título correto: 2023.1_G1_Logico_ProjetoRoteirosAereos*. !!**
- 
- (Apague esses comentários)
-
 # NomeDoProjeto
 
 **Disciplina**: FGA0210 - PARADIGMAS DE PROGRAMAÇÃO - T02 <br>
-**Nro do Grupo (de acordo com a Planilha de Divisão dos Grupos)**: XX<br>
-**Paradigma**: XXXXXXXXXX<br>
+**Nro do Grupo (de acordo com a Planilha de Divisão dos Grupos)**: 01<br>
+**Paradigma**: Sistemas Multiagentes<br>
 
 ## Alunos
 |Matrícula | Aluno |
 | -- | -- |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
+| 19/0054832 | Arthur Talles de Sousa Cunha       |
+| 18/0105256 | Lucas da Cunha Andrade             |
+| 18/0066382 | Marcos Felipe de Almeida Souza     |
+| 18/0129147 | Pedro de Miranda Haick             |
+| 17/0114929 | Thiago França Vale Oliveira        |
+| 18/0068229 | Victor Yukio Cavalcanti Miki       |
 
 ## Sobre 
-Descreva o seu projeto em linhas gerais. 
-Use referências, links, que permitam conhecer um pouco mais sobre o projeto.
-Capriche nessa seção, pois ela é a primeira a ser lida pelos interessados no projeto.
+O projeto é voltado para a prática da programação de multiagentes. O tema consiste em uma simulação na qual três agentes, herói, civil e monstro, serão introduzidos em um cenário e o destino de cada um deles será proporcional à sua quantidade, definida pelo usuário.
+Os três agentes possuem autonomia entre si. Contudo, a co-existência deles gera problemas, tendo em vista que possuem objetivos conflitantes.
 
 ## Screenshots
-Adicione 2 ou mais screenshots do projeto em termos de interface e/ou funcionamento.
 
-## Instalação 
-**Linguagens**: xxxxxx<br>
-**Tecnologias**: xxxxxx<br>
-Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
-Insira um manual ou um script para auxiliar ainda mais.
-Gifs animados e outras ilustrações são bem-vindos!
+![Exemplo simulação](./img/screenshot.PNG)
+
+ 
+## Instalação
+
+Linguagens : Python
+Tecnologias : mesa, tkinker, Turtle, Pygame
+
+Após clonar o repositório, instale o requerimentos com o seguinte comando no terminal:
+
+pip install -r requirements.txt
 
 ## Uso 
-Explique como usar seu projeto.
-Procure ilustrar em passos, com apoio de telas do software, seja com base na interface gráfica, seja com base no terminal.
-Nessa seção, deve-se revelar de forma clara sobre o funcionamento do software.
+O passo a passo para rodar o projeto é:
+
+1. No diretório do projeto digite comando python server.py no terminal e espere a interface carregar por completa ( quando os botões aparecerem).
+2. Aperte o botão "Iniciar Simulação" e divirta-se com a simulação da balada.
+3. Caso deseje adicionar um agente, existe um botão específico para cada .
 
 ## Vídeo
 Adicione 1 ou mais vídeos com a execução do projeto.
