@@ -108,7 +108,7 @@ class Heroi(mesa.Agent):
         self.shape.shape('gifs/boneco_cansado.gif')
 
     def resgatar(self):
-        pessoasNaoSalvas = balada.pessoas_nao_salvas()
+        pessoasNaoSalvas = game.pessoas_nao_salvas()
         if (len(pessoasNaoSalvas) == 0):
             return
 
@@ -122,11 +122,16 @@ class Heroi(mesa.Agent):
 
 
 class Pessoa(Agente):
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, x, y):
         super().__init__(unique_id, model)
         createShade(self, 'gifs/boneco_normal.gif')
         self.salvo = False
         self.morto = False
+        self.x = x
+        self.y = y    
+        self.vida = random.randint(50, 150)
+        self.shape.setposition(self.x, self.y)
+        self.shape.showturtle()
 
     def move(self):
         if (self.salvo):
@@ -135,7 +140,7 @@ class Pessoa(Agente):
         if (self.vida <= 0):
             self.morte()
         elif (game.verifica_monstros_perto(self)):
-            self.vida -= 1
+            self.vida -= 10
 
     def morte(self):
         self.shape.hideturtle()
@@ -214,18 +219,21 @@ class Pessoa(Agente):
 
 
 class GameModel(mesa.Model):
-    def __init__(self, N):
-        self.num_monstros = N
+    def __init__(self, P):
+
+        self.num_pessoas = P
         self.schedule = mesa.time.SimultaneousActivation(self)
         self.pessoas = []
         self.monstros = []
         self.herois = []
         self.id = 10
-
-        for i in range(self.num_monstros):
-            p = Monstro(i, self)
+        
+        for i in range(self.num_pessoas):
+            p = Pessoa(i, self, 150, -180)
             self.pessoas.append(p)
             self.schedule.add(p)
+
+
 
         self.id += 1
 
@@ -255,9 +263,9 @@ class GameModel(mesa.Model):
         self.schedule.add(m)
 
     def adicionar_pessoa(self):
-        m = Pessoa(self.id, self)
+        m = Pessoa(self.id, self, 150,-180)
         self.id += 1
-        self.monstros.append(m)
+        self.pessoas.append(m)
         self.schedule.add(m)
 
     def verifica_monstros_perto(self, agent):
