@@ -2,7 +2,7 @@ import random
 from mesa import Agent
 
 class AnimalAgent(Agent):
-  def __init__(self, unique_id, model, energy, rep_percentage, prey):
+  def __init__(self, unique_id, model, energy, rep_percentage, image, prey):
     super().__init__(unique_id, model)
     self.energy = energy
     self.prey = prey
@@ -10,6 +10,7 @@ class AnimalAgent(Agent):
     self.color = "green"
     self.rep_percentage = rep_percentage
     self.shape = "circle"
+    self.image = image
 
   def move(self):
     possible_moves = self.model.grid.get_neighborhood(self.pos, moore=True, include_center=False)
@@ -30,7 +31,7 @@ class AnimalAgent(Agent):
       if empty_cells:
         print(f"== {self.str} reproduziu ==")
         x, y = random.choice(empty_cells)
-        new_agent = type(self)(self.model.next_id(), self.model, self.energy, self.rep_percentage)
+        new_agent = type(self)(self.model.next_id(), self.model, self.energy, self.rep_percentage, self.image)
         self.model.schedule.add(new_agent)
         self.model.grid.place_agent(new_agent, (x, y))
         self.model.current_id += 1
@@ -52,14 +53,26 @@ class AnimalAgent(Agent):
     self.reproduce()
 
   def get_portrayal(self):
-    if self.energy > 10:
-      image = "src/assets/Green_" + self.name + ".png"
-    elif self.energy > 5 and self.energy < 10:
-      image = "src/assets/Yellow_" + self.name + ".png"
-    else: 
-      image = "src/assets/Red_" + self.name + ".png"
-    return {
-      "Shape": image,
-      "Layer": 0,
-      "scale": 1.5, 
-    }
+    if self.image == False:
+      return {
+        "Shape": "circle", 
+        "Color": self.color, 
+        "Filled": True, 
+        "Layer": 0, 
+        "r": 1,
+        "text": str(self.energy),
+        "text_color": self.text_color,
+        "text_position": "bottom"
+      }
+    else:
+      if self.energy > 10:
+        image = "src/assets/Green_" + self.name + ".png"
+      elif self.energy > 5 and self.energy < 10:
+        image = "src/assets/Yellow_" + self.name + ".png"
+      else: 
+        image = "src/assets/Red_" + self.name + ".png"
+      return {
+        "Shape": image,
+        "Layer": 0,
+        "scale": 1.5, 
+      }

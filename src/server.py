@@ -20,7 +20,7 @@ server = ModularServer(
     "lion_rep_chance": Slider("Chance de reprodução do Leão", 2, 1, 100),
     "zebra_rep_chance": Slider("Chance de reprodução da Zebra", 2, 1, 100),
     "gazelle_rep_chance": Slider("Chance de reprodução do Gazela", 2, 1, 100),
-    "image_checkbox": Checkbox("imagem-energia", True)
+    "image_checkbox": Checkbox("Energia <-> Imagem", True)
   },
   8521
 )

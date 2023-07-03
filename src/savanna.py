@@ -39,7 +39,7 @@ class SavannaModel(Model):
     for i in range(num_lions):
       x = random.randrange(GRID_SIZE)
       y = random.randrange(GRID_SIZE)
-      lion = LionAgent(i, self, lion_energy, lion_rep_chance / 100)
+      lion = LionAgent(i, self, lion_energy, lion_rep_chance / 100, image_checkbox)
       self.schedule.add(lion)
       self.grid.place_agent(lion, (x, y))
       self.current_id += 1
@@ -47,7 +47,7 @@ class SavannaModel(Model):
     for i in range(num_gazelles):
       x = random.randrange(GRID_SIZE)
       y = random.randrange(GRID_SIZE)
-      gazelle = GazelleAgent(num_lions + i, self, gazelle_energy, gazelle_rep_chance / 100)
+      gazelle = GazelleAgent(num_lions + i, self, gazelle_energy, gazelle_rep_chance / 100, image_checkbox)
       self.schedule.add(gazelle)
       self.grid.place_agent(gazelle, (x, y))
       self.current_id += 1
@@ -55,7 +55,7 @@ class SavannaModel(Model):
     for i in range(num_zebras):
       x = random.randrange(GRID_SIZE)
       y = random.randrange(GRID_SIZE)
-      zebra = ZebraAgent(num_lions + num_gazelles + i, self, zebra_energy, zebra_rep_chance / 100)
+      zebra = ZebraAgent(num_lions + num_gazelles + i, self, zebra_energy, zebra_rep_chance / 100, image_checkbox)
       self.schedule.add(zebra)
       self.grid.place_agent(zebra, (x, y))
       self.current_id += 1
