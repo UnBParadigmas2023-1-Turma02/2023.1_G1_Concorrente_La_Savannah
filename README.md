@@ -58,6 +58,8 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 | Arthur Talles de Sousa Cunha |  Contribuição para implementação gráfica, para a lógica dos agentes, bem como os comportamentos esperados. | Excelente |
 | Marcos Felipe de Almeida Souza |  Contribuição para implementação gráfica, para a lógica dos agentes, bem como os comportamentos esperados, além dos efeitos especiais que trouxeram mais interatividade entre os agentes. | Excelente |
 
+### Commits
+   Um gráfico de commits pode ser visualizado neste [link](https://github.com/UnBParadigmas2023-1-Turma02/2023.1_G1_SMA_La_Savannah/pulse)
 ## Outros 
 ### Lições Aprendidas
 |Nome do Membro | Lições Aprendidas | 
@@ -88,3 +90,5 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 * mesa: <https://mesa.readthedocs.io/en/latest/tutorials/intro_tutorial.html>
 * Turtle: <https://docs.python.org/3/library/turtle.html>
 * Pygame: <https://www.pygame.org/news>
+
+
