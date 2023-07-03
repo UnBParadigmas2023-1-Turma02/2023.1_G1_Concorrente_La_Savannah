@@ -125,6 +125,11 @@ class Heroi(mesa.Agent):
         elif (len(monstros_vivos) >= 1):
             self.cacar_monstro(monstros_vivos)
 
+        if (self.vida <= 0):
+            self.morte()
+        elif (len(game.verifica_monstros_perto(self)) >= 1):
+            self.vida -= 10
+
     def cacar_monstro(self, monstros):
         index = random.randint(0, len(monstros) - 1)
         alvo = monstros[index]
@@ -192,7 +197,7 @@ class Pessoa(Agente):
 
         valor_variavel = 2 * random.randint(-self.id, self.id)
         self.shape.goto(COORD_SAIDA_X + valor_variavel, COORD_SAIDA_Y)
-        self.shape.shape('gifs/boneco_curtindo.gif')
+        self.shape.shape('gifs/boneco_normal.gif')
         self.escondido = True
         self.salvo = True
 
