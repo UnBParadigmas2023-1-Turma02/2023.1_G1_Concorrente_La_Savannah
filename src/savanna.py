@@ -22,6 +22,7 @@ class SavannaModel(Model):
     lion_rep_chance = 2,
     zebra_rep_chance = 2,
     gazelle_rep_chance = 2,
+    image_checkbox = True,
   ):
     self.grid = MultiGrid(GRID_SIZE, GRID_SIZE, torus=True)
     self.schedule = RandomActivation(self)
@@ -32,7 +33,7 @@ class SavannaModel(Model):
     self.lion_energy = lion_energy
     self.gazelle_energy = gazelle_energy
     self.zebra_energy = zebra_energy
-
+    self.image_checkbox = image_checkbox
     self.current_id = 0
 
     for i in range(num_lions):

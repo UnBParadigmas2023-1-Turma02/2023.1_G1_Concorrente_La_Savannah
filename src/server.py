@@ -1,7 +1,7 @@
 import mesa
 from mesa.visualization.modules import ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
-from mesa.visualization.UserParam import Slider
+from mesa.visualization.UserParam import Slider, Checkbox
 
 from src.savanna import SavannaModel
 from src.util import grid_view, agent_count
@@ -19,7 +19,8 @@ server = ModularServer(
     "zebra_energy": Slider("Energia inicial das Zebras", 20, 1, 50),
     "lion_rep_chance": Slider("Chance de reprodução do Leão", 2, 1, 100),
     "zebra_rep_chance": Slider("Chance de reprodução da Zebra", 2, 1, 100),
-    "gazelle_rep_chance": Slider("Chance de reprodução do Gazela", 2, 1, 100)
+    "gazelle_rep_chance": Slider("Chance de reprodução do Gazela", 2, 1, 100),
+    "image_checkbox": Checkbox("imagem-energia", True)
   },
   8521
 )

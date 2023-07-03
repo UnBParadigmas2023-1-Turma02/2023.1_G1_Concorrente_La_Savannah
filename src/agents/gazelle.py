@@ -7,3 +7,4 @@ class GazelleAgent(AnimalAgent):
     self.color = "red"
     self.shape = "src/assets/gazelle.png"
     self.prey = "Leão"
+    self.name = "Gazelle"

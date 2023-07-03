@@ -7,3 +7,4 @@ class ZebraAgent(AnimalAgent):
     self.color = "blue"
     self.shape = "src/assets/zebra.png"
     self.prey = "Gazela"
+    self.name = "Zebra"

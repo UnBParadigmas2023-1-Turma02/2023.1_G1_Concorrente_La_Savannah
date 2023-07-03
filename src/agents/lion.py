@@ -7,3 +7,4 @@ class LionAgent(AnimalAgent):
     self.color = "orange"
     self.shape = "src/assets/lion.png"
     self.prey = "Zebra"
+    self.name = "Lion"

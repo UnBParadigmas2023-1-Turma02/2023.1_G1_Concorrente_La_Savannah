@@ -52,13 +52,14 @@ class AnimalAgent(Agent):
     self.reproduce()
 
   def get_portrayal(self):
+    if self.energy > 10:
+      image = "src/assets/Green_" + self.name + ".png"
+    elif self.energy > 5 and self.energy < 10:
+      image = "src/assets/Yellow_" + self.name + ".png"
+    else: 
+      image = "src/assets/Red_" + self.name + ".png"
     return {
-      "Shape": self.shape, 
-      "Color": self.color, 
-      "Filled": True, 
-      "Layer": 0, 
-      "r": 1,
-      "text": str(self.energy),
-      "text_color": "white",
-      "text_position": "bottom"
+      "Shape": image,
+      "Layer": 0,
+      "scale": 1.5, 
     }
