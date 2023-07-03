@@ -1,5 +1,6 @@
 import turtle
 import mesa
+import time
 import random
 import tkinter.messagebox
 
@@ -12,7 +13,9 @@ TAMANHO_MAPA = 160
 COORD_INICIO = (-170, 180)
 COORD_CIVIL = (150, -180)
 COOR_CENTER = (0, 0)
-COORD_SAIDA = (160, 180)
+COORD_SAIDA = (0, 60)
+COORD_SAIDA_X = 0
+COORD_SAIDA_Y = 60
 MAPA_JOGAVEL_X = 160
 MAPA_JOGAVEL_Y = 60
 
@@ -21,8 +24,14 @@ MONSTRO_GIF = [
     'gifs/goblin_default.gif'
 ]
 
-PESSOA_GIF = 'gifs/boneco_normal.gif'
+MONSTRO_DIE_GIF = [
+    'gifs/minotaur_die.gif',
+    'gifs/goblin_default.gif'
+]
+
+PESSOA_GIF = ['gifs/boneco_normal.gif', 'gifs/boneco_curtindo.gif']
 HEROI_GIF = 'gifs/hero_default.gif'
+HEROI_ATAQUE_GIF = 'gifs/hero_atack.gif'
 
 
 window = tkinter.Tk()
@@ -30,9 +39,13 @@ canvas = tkinter.Canvas(master=window, width=400, height=400)
 canvas.grid(padx=2, pady=2, row=0, column=0, rowspan=10, columnspan=10)
 screen = turtle.TurtleScreen(canvas)
 screen.bgpic('gifs/background_florest.png')
-screen.register_shape(PESSOA_GIF)
-screen.register_shape('gifs/hero_default.gif')
+screen.register_shape(HEROI_ATAQUE_GIF)
+screen.register_shape(HEROI_GIF)
+for gif in MONSTRO_DIE_GIF:
+    screen.register_shape(gif)
 for gif in MONSTRO_GIF:
+    screen.register_shape(gif)
+for gif in PESSOA_GIF:
     screen.register_shape(gif)
 
 
@@ -85,8 +98,11 @@ class Monstro(Agente):
         self.shape.goto(self.x, self.y)
 
     def morrer(self):
-        self.shape.hideturtle()
+        self.shape.shape(MONSTRO_DIE_GIF[0])
+        time.sleep(0.2)
         self.escondido = True
+        self.vida = 0
+        self.shape.hideturtle()
 
 
 class Heroi(mesa.Agent):
@@ -95,36 +111,63 @@ class Heroi(mesa.Agent):
         self.x = 0
         self.y = 60
         self.vida = random.randint(0, 150)
+        self.alvoResgate = None
         createShade(self, 'gifs/hero_default.gif')
 
     def move(self):
-        self.resgatar()
+        pessoas_vivas = game.pessoas_vivas()
+        monstros_vivos = game.monstros_vivos()
+
+        if (len(pessoas_vivas) >= 1):
+            self.resgatar()
+        elif (len(monstros_vivos) >= 1):
+            self.cacar_monstro(monstros_vivos)
+
+    def cacar_monstro(self, monstros):
+        index = random.randint(0, len(monstros) - 1)
+        alvo = monstros[index]
+        self.ataca_monstro(alvo)
 
     def morte(self):
         self.shape.hideturtle()
         self.escondido = True
 
-    def atacar(self):
-        self.shape.shape('gifs/boneco_cansado.gif')
+    def escolhe_alvo_resgate(self):
+        if (self.alvoResgate and (not self.alvoResgate.salvo and not self.alvoResgate.morto)):
+            return
+        else:
+            pessoasNaoSalvas = game.pessoas_vivas()
+            if (len(pessoasNaoSalvas) == 0):
+                return
+            indexRnd = random.randint(0, len(pessoasNaoSalvas) - 1)
+            self.alvoResgate = pessoasNaoSalvas[indexRnd]
 
     def resgatar(self):
-        pessoasNaoSalvas = balada.pessoas_nao_salvas()
-        if (len(pessoasNaoSalvas) == 0):
-            return
+        self.escolhe_alvo_resgate()
 
-        indexRnd = random.randint(0, len(pessoasNaoSalvas) - 1)
+        self.shape.goto(self.alvoResgate.x - 10, self.alvoResgate.y - 10)
 
-        pessoaRegate = pessoasNaoSalvas[indexRnd]
+        monstros_perto_alvo = game.verifica_monstros_perto(self.alvoResgate)
 
-        self.shape.goto(pessoaRegate.x, pessoaRegate.y)
-        self.shape.goto(COORD_SAIDA)
-        pessoaRegate.resgate()
+        if (len(monstros_perto_alvo) == 0):
+            self.alvoResgate.resgate()
+            self.shape.goto(COORD_SAIDA)
+        else:
+            self.cacar_monstro(monstros_perto_alvo)
+
+    def ataca_monstro(self, monstro):
+        self.shape.goto(monstro.x - 20, monstro.y - 10)
+        self.shape.shape('gifs/hero_atack.gif')
+        time.sleep(0.2)
+        monstro.morrer()
+        self.shape.shape('gifs/hero_default.gif')
 
 
 class Pessoa(Agente):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         createShade(self, 'gifs/boneco_normal.gif')
+        self.id = unique_id
         self.salvo = False
         self.morto = False
 
@@ -134,7 +177,7 @@ class Pessoa(Agente):
 
         if (self.vida <= 0):
             self.morte()
-        elif (game.verifica_monstros_perto(self)):
+        elif (len(game.verifica_monstros_perto(self)) >= 1):
             self.vida -= 1
 
     def morte(self):
@@ -143,10 +186,11 @@ class Pessoa(Agente):
         self.escondido = True
 
     def resgate(self):
-        if (game.verifica_monstros_perto(self)):
+        if (len(game.verifica_monstros_perto(self)) >= 1):
             return
 
-        self.shape.goto(COORD_SAIDA)
+        valor_variavel = 2 * random.randint(-self.id, self.id)
+        self.shape.goto(COORD_SAIDA_X + valor_variavel, COORD_SAIDA_Y)
         self.shape.shape('gifs/boneco_curtindo.gif')
         self.escondido = True
         self.salvo = True
@@ -224,10 +268,9 @@ class GameModel(mesa.Model):
 
         for i in range(self.num_monstros):
             p = Monstro(i, self)
-            self.pessoas.append(p)
+            self.monstros.append(p)
             self.schedule.add(p)
-
-        self.id += 1
+            self.id += 1
 
     def step(self):
         for pessoa in self.schedule.agents:
@@ -257,22 +300,31 @@ class GameModel(mesa.Model):
     def adicionar_pessoa(self):
         m = Pessoa(self.id, self)
         self.id += 1
-        self.monstros.append(m)
+        self.pessoas.append(m)
         self.schedule.add(m)
 
     def verifica_monstros_perto(self, agent):
         monstros = game.monstros
+        monstros_perto = []
         for monstro in monstros:
-            if (self.esta_perto(monstro, agent)):
-                return 1
-        return 0
+            if (self.esta_perto(monstro, agent) and monstro.vida > 0):
+                monstros_perto.append(monstro)
 
-    def pessoas_nao_salvas(self):
-        nao_salvas = []
+        return monstros_perto
+
+    def pessoas_vivas(self):
+        vivos = []
         for pessoa in self.pessoas:
             if (not pessoa.salvo and not pessoa.morto):
-                nao_salvas.append(pessoa)
-        return nao_salvas
+                vivos.append(pessoa)
+        return vivos
+
+    def monstros_vivos(self):
+        vivos = []
+        for monstro in self.monstros:
+            if (monstro.vida >= 1 and not monstro.escondido):
+                vivos.append(monstro)
+        return vivos
 
     def esta_perto(self, primeiro, segundo):
         distanciaAceitaComoPerto = range(-50, 50)
@@ -308,11 +360,6 @@ Play_Button = tkinter.Button(
     master=window, text="Iniciar simulação", command=Play)
 Play_Button.config(bg="light gray", fg="black")
 Play_Button.grid(padx=2, pady=2, row=0, column=11, sticky='nsew')
-
-Board_Button = tkinter.Button(
-    master=window, text="Check todo mundo", command=game.remover_pessoa)
-Play_Button.config(bg="light gray", fg="black")
-Board_Button.grid(padx=2, pady=2, row=1, column=11, sticky='nsew')
 
 Board_Button = tkinter.Button(
     master=window, text="Adicionar Heróis", command=game.adicionar_heroi)
