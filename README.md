@@ -93,3 +93,12 @@ Quaisquer outras informações sobre o projeto podem ser descritas aqui. Não es
 ## Fontes
 https://mesa.readthedocs.io/en/stable/#
 https://docs.python.org/3/
+
+
+# Aviso  
+<center>
+<img src="imagens/atencao.gif" alt="drawing" width="100"/> 
+<center/>
+
+O segundo projeto elaborado pode ser encontrado nesta [branch](https://github.com/UnBParadigmas2023-1-Turma02/2023.1_G1_SMA_La_Savannah/tree/projeto_monster_escape)
+
