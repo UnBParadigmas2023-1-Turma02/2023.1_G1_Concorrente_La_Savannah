@@ -32,6 +32,7 @@ MONSTRO_DIE_GIF = [
 PESSOA_GIF = ['gifs/boneco_normal.gif', 'gifs/boneco_curtindo.gif']
 HEROI_GIF = 'gifs/hero_default.gif'
 HEROI_ATAQUE_GIF = 'gifs/hero_atack.gif'
+GRAVE_GIF = 'gifs/grave.gif'
 
 
 window = tkinter.Tk()
@@ -41,6 +42,7 @@ screen = turtle.TurtleScreen(canvas)
 screen.bgpic('gifs/background_florest.png')
 screen.register_shape(HEROI_ATAQUE_GIF)
 screen.register_shape(HEROI_GIF)
+screen.register_shape(GRAVE_GIF)
 for gif in MONSTRO_DIE_GIF:
     screen.register_shape(gif)
 for gif in MONSTRO_GIF:
@@ -98,7 +100,7 @@ class Monstro(Agente):
         self.shape.goto(self.x, self.y)
 
     def morrer(self):
-        self.shape.shape(MONSTRO_DIE_GIF[0])
+        self.shape.shape(MONSTRO_DIE_GIF[self.monsterId])
         time.sleep(0.2)
         self.escondido = True
         self.vida = 0
@@ -170,7 +172,7 @@ class Pessoa(Agente):
         self.morto = False
 
     def move(self):
-        if (self.salvo):
+        if (self.salvo or self.morto):
             return
 
         if (self.vida <= 0):
@@ -179,7 +181,8 @@ class Pessoa(Agente):
             self.vida -= 10
 
     def morte(self):
-        self.shape.hideturtle()
+        self.shape.shape(GRAVE_GIF)
+        self.vida = 0
         self.morto = True
         self.escondido = True
 
@@ -236,7 +239,7 @@ class GameModel(mesa.Model):
         self.schedule.add(m)
 
     def adicionar_pessoa(self):
-        m = Pessoa(self.id, self, 150, -180)
+        m = Pessoa(self.id, self)
         self.id += 1
         self.pessoas.append(m)
         self.schedule.add(m)
