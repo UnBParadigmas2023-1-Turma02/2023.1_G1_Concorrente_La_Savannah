@@ -36,7 +36,7 @@ for gif in MONSTRO_GIF:
     screen.register_shape(gif)
 
 
-def SetShade(self, url):
+def createShade(self, url):
     self.shape = turtle.RawTurtle(screen)
     self.shape.hideturtle()
     self.shape.shape(url)
@@ -58,25 +58,31 @@ class Monstro(Agente):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.monsterId = random.randint(0, len(MONSTRO_GIF) - 1)
-        SetShade(self, MONSTRO_GIF[self.monsterId])
+        createShade(self, MONSTRO_GIF[self.monsterId])
 
     def move(self):
         if (self.vida == 0):
             self.morrer()
         else:
-            if self.shape.xcor() >= 180:
-                self.x -= 5
-            elif self.shape.ycor() >= 50:
-                self.y -= 5
-            elif self.shape.xcor() <= -180:
-                self.x += 5
-            elif self.shape.ycor() <= -180:
-                self.y += 5
-            else:
-                self.x += random.randint(-10, 10)
-                self.y += random.randint(-10, 10)
+            self.walk_monster()
 
-            self.shape.goto(self.x, self.y)
+    def walk_monster(self):
+        # Lógica para andar aleatoriamente pelo mapa
+        dx = random.randint(-10, 10)
+        dy = random.randint(-30, 30)
+
+        # Adicionando um fator de aleatoriedade para a direção dos movimentos
+        dx *= random.choice([-1, 1])
+        dy *= random.choice([-1, 1])
+
+        self.x += dx
+        self.y += dy
+
+        # Limitando as coordenadas para que o boneco permaneça dentro dos limites do mapa
+        self.x = max(min(self.x, MAPA_JOGAVEL_X), -TAMANHO_MAPA)
+        self.y = max(min(self.y, MAPA_JOGAVEL_Y), -TAMANHO_MAPA)
+
+        self.shape.goto(self.x, self.y)
 
     def morrer(self):
         self.shape.hideturtle()
@@ -89,7 +95,7 @@ class Heroi(mesa.Agent):
         self.x = 0
         self.y = 60
         self.vida = random.randint(0, 150)
-        SetShade(self, 'gifs/hero_default.gif')
+        createShade(self, 'gifs/hero_default.gif')
 
     def move(self):
         self.resgatar()
@@ -118,38 +124,32 @@ class Heroi(mesa.Agent):
 class Pessoa(Agente):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        SetShade(self, 'gifs/boneco_normal.gif')
+        createShade(self, 'gifs/boneco_normal.gif')
+        self.salvo = False
+        self.morto = False
 
     def move(self):
-        if (self.isRescued == True):
-            self.resgatados += 1
-        if (self.centro != 0):
-            if (self.isRescued == True and self.resgatados < 2):  # pegando um civil de cada vez
-                self.backtoinitialpoint()
-            else:
-                self.gotocenter()
-        elif (self.energiaHeroi == 0):  # nessa condição, a gente podia pensar em uma forma de interação. Se o herói morrer, o civil tenta fugir ou morre também ?
-            self.walk_monster()  # SÓ PARA TESTAR O A FORMA ALEATÓRIA DE ANDAR
-        elif (distance(self.shape.position(), COORD_CIVIL) < 380 and self.isRescued == False and self.vontade == 1):
-            self.gotocivil()
-        else:
-            if self.shape.xcor() >= 180:
-                self.x -= 5
-            elif self.shape.ycor() >= 180:
-                self.y -= 5
-            elif self.shape.xcor() <= -180:
-                self.x += 5
-            elif self.shape.ycor() <= -180:
-                self.y += 5
-            else:
-                self.x += random.randint(-5, 5)
-                self.y += random.randint(-5, 5)
+        if (self.salvo):
+            return
 
-            self.shape.goto(self.x, self.y)
+        if (self.vida <= 0):
+            self.morte()
+        elif (game.verifica_monstros_perto(self)):
+            self.vida -= 1
 
-            self.vontade = random.randint(1, 50)
+    def morte(self):
+        self.shape.hideturtle()
+        self.morto = True
+        self.escondido = True
 
-            self.energiaHeroi -= 1
+    def resgate(self):
+        if (game.verifica_monstros_perto(self)):
+            return
+
+        self.shape.goto(COORD_SAIDA)
+        self.shape.shape('gifs/boneco_curtindo.gif')
+        self.escondido = True
+        self.salvo = True
 
     def backtoinitialpoint(self):
         x, y = self.shape.position()
@@ -212,24 +212,6 @@ class Pessoa(Agente):
 
         self.shape.goto(self.x, self.y)
 
-    def walk_monster(self):
-        # Lógica para andar aleatoriamente pelo mapa
-        dx = random.randint(-10, 10)
-        dy = random.randint(-30, 30)
-
-        # Adicionando um fator de aleatoriedade para a direção dos movimentos
-        dx *= random.choice([-1, 1])
-        dy *= random.choice([-1, 1])
-
-        self.x += dx
-        self.y += dy
-
-        # Limitando as coordenadas para que o boneco permaneça dentro dos limites do mapa
-        self.x = max(min(self.x, 180), -180)
-        self.y = max(min(self.y, 180), -180)
-
-        self.shape.goto(self.x, self.y)
-
 
 class GameModel(mesa.Model):
     def __init__(self, N):
@@ -277,6 +259,20 @@ class GameModel(mesa.Model):
         self.id += 1
         self.monstros.append(m)
         self.schedule.add(m)
+
+    def verifica_monstros_perto(self, agent):
+        monstros = game.monstros
+        for monstro in monstros:
+            if (self.esta_perto(monstro, agent)):
+                return 1
+        return 0
+
+    def esta_perto(self, primeiro, segundo):
+        distanciaAceitaComoPerto = range(-50, 50)
+        distanciaX = primeiro.x - segundo.x
+        distanciaY = primeiro.y - segundo.y
+
+        return distanciaX in distanciaAceitaComoPerto and distanciaY in distanciaAceitaComoPerto
 
     def next_agent_id(self):
         return max([agent.unique_id for agent in self.schedule.agents]) + 1
