@@ -96,11 +96,28 @@ Participação dos membros do grupo para o projeto:
 | Victor Yukio Cavalcanti Miki | Idealização do projeto, renderizar imagens, docker                                 | Boa                                                                            |
 
 ## Outros 
-Quaisquer outras informações sobre o projeto podem ser descritas aqui. Não esqueça, entretanto, de informar sobre:
-(i) Lições Aprendidas;
-(ii) Percepções;
-(iii) Contribuições e Fragilidades, e
-(iV) Trabalhos Futuros.
+
+### Lições Aprendidas
+|Nome do Membro | Lições Aprendidas | 
+| -------- | -- | 
+| Lucas da Cunha  | Optamos por escolher a biblioteca MESA em python para trabalhar e apesar de ser de fácil uso, entregando as classes e métodos de forma bem mastigada, tivemos dificuldades em personaliza-las. |   
+
+### Percepções;
+|Nome do Membro | Percepções | 
+| -- | -- | 
+| Victor yukio  |  Uma perceção que tivemos foi na interação conjunta de três animais predando um ao outro como em um jogo de pedra, papel e tesoura. a forma que os agentes multithread lidam com o código fez com que os três animais dentro da interação fossem devorados.  |  
+
+
+### Fragilidades
+|Nome do Membro | Fragilidades | 
+| -- | -- | 
+| Thiago  |  |  
+
+
+### Trabalhos Futuros.
+|Nome do Membro | Ideias para trabalhos futuros | 
+| -- | -- | 
+| Victor  | Poderia ter mais animais e métodos mais desenvolvidos. A parte de procriar dos animais, por exemplo, poderia usar a fome atual do personagem e a necessidade de encontrar outro membro da mesma espécie. Ou a criação de uma Classe VEGETACAO para usar  como base da cadeia alimentar. Até o momento configurar um cadeia alimentar equilibrada e lógica foi uma tarefa que não priorizamos. |  
 
 ## Fontes
 https://mesa.readthedocs.io/en/stable/#
