@@ -124,12 +124,7 @@ class Heroi(mesa.Agent):
             self.resgatar()
         elif (len(monstros_vivos) >= 1):
             self.cacar_monstro(monstros_vivos)
-
-        if (self.vida <= 0):
-            self.morte()
-        elif (len(game.verifica_monstros_perto(self)) >= 1):
-            self.vida -= 10
-
+        
     def cacar_monstro(self, monstros):
         index = random.randint(0, len(monstros) - 1)
         alvo = monstros[index]
@@ -182,7 +177,10 @@ class Pessoa(Agente):
 
         if (self.vida <= 0):
             self.morte()
-        elif (len(game.verifica_monstros_perto(self)) >= 1):
+        else:
+            self.walk_civilian()
+
+        if (len(game.verifica_monstros_perto(self)) >= 1):
             self.vida -= 10
 
     def morte(self):
@@ -200,7 +198,31 @@ class Pessoa(Agente):
         self.shape.shape('gifs/boneco_normal.gif')
         self.escondido = True
         self.salvo = True
+    
+    def walk_civilian(self):
+        # Lógica para andar aleatoriamente pelo mapa
+        dx = random.randint(-10, 10)
+        dy = random.randint(-10, 10)
 
+        # Adicionando um fator de aleatoriedade para a direção dos movimentos
+        dx *= random.choice([-1, 1])
+        dy *= random.choice([-1, 1])
+
+        self.x += dx
+        self.y += dy
+
+        # Limitando as coordenadas para que o boneco permaneça dentro dos limites do mapa
+        self.x = max(min(self.x, MAPA_JOGAVEL_X), -TAMANHO_MAPA)
+        self.y = max(min(self.y, MAPA_JOGAVEL_Y), -TAMANHO_MAPA)
+
+        self.shape.goto(self.x, self.y)
+
+    def morrer(self):
+        self.shape.shape(GRAVE_GIF[self.id])
+        time.sleep(0.2)
+        self.escondido = True
+        self.vida = 0
+        self.shape.hideturtle()
 
 class GameModel(mesa.Model):
     def __init__(self, P):
