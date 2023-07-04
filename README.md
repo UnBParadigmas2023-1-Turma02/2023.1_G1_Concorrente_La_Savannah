@@ -111,7 +111,7 @@ Participação dos membros do grupo para o projeto:
 ### Fragilidades
 |Nome do Membro | Fragilidades | 
 | -- | -- | 
-| Thiago  |  |  
+| Thiago  | Uma fragilidade encontrada na criação do projeto vem da própria biblioteca do mesa e sua documentação. A biblioteca está incompleta, existem vários métodos que possuem assinatura mas não possuem implementação. Durante o projeto, várias ideias acabaram sendo descartadas por não existirem caminhos documentados para que fossem feitos, um exemplo é o botão de about que vem por default na criação do server, porém não existe nenhuma implementação para o uso dele na bibliteca. Existem caminhos para contornar alguns desses problemas, mas na maioria dos casos seria necessário a criação de um projeto independente que rodasse lado a lado com a aplicação. A falta de conteúdo disponível na internet e outros lugares acaba dificultando ainda mais esse processo. Isso implica em pouca variedade no quesito de customização da página criada. |  
 
 
 ### Trabalhos Futuros.
