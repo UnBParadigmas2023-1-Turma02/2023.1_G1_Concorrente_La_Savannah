@@ -84,7 +84,7 @@ Com o projeto rodando, basta definir os valores iniciais de cada animal e inicia
 ## Vídeo
 Segue a seguir o link do video:
 
-[Link do video]().
+[Link do video](https://www.youtube.com/watch?v=Uw8omCx3QdE).
 
 ## Participações
 Participação dos membros do grupo para o projeto:
