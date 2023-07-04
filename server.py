@@ -29,7 +29,7 @@ MONSTRO_DIE_GIF = [
     'gifs/goblin_default.gif'
 ]
 
-PESSOA_GIF = ['gifs/boneco_normal.gif', 'gifs/boneco_curtindo.gif']
+PESSOA_GIF = ['gifs/Man.gif', 'gifs/boneco_curtindo.gif']
 HEROI_GIF = 'gifs/hero_default.gif'
 HEROI_ATAQUE_GIF = 'gifs/hero_atack.gif'
 GRAVE_GIF = 'gifs/grave.gif'
@@ -166,7 +166,7 @@ class Heroi(mesa.Agent):
 class Pessoa(Agente):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        createShade(self, 'gifs/boneco_normal.gif')
+        createShade(self, 'gifs/Man.gif')
         self.id = unique_id
         self.salvo = False
         self.morto = False
@@ -195,7 +195,7 @@ class Pessoa(Agente):
 
         valor_variavel = 2 * random.randint(-self.id, self.id)
         self.shape.goto(COORD_SAIDA_X + valor_variavel, COORD_SAIDA_Y)
-        self.shape.shape('gifs/boneco_normal.gif')
+        self.shape.shape('gifs/Man.gif')
         self.escondido = True
         self.salvo = True
     
